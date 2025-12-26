@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>მოითხოვე ზარი</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="page-light">
+
+  <header class="simple-header container">
+    <a class="back-link" href="index.html">← უკან</a>
+    <h1 class="page-title">ზარის მოთხოვნა</h1>
+  </header>
+
+  <main class="container form-page">
+    <form class="request-form" id="requestForm">
+      <div class="form-row">
+        <label for="firstName">სახელი</label>
+        <input id="firstName" type="text" required minlength="2" placeholder="მაგ: ლევანი" />
+      </div>
+
+      <div class="form-row">
+        <label for="lastName">გვარი</label>
+        <input id="lastName" type="text" required minlength="2" placeholder="მაგ: ბეჟაშვილი" />
+      </div>
+
+      <div class="form-row">
+        <label for="phone">ტელეფონი</label>
+        <input id="phone" type="tel" required placeholder="მაგ: +995577155133 ან 577155133" />
+      </div>
+
+      <div class="form-row">
+        <label for="category">კატეგორია</label>
+        <select id="category" required>
+          <option value="" disabled selected>აირჩიე კატეგორია</option>
+          <option value="tech">ტექნოლოგია</option>
+          <option value="furniture">ავეჯი</option>
+          <option value="consumables">სახარჯები</option>
+          <option value="lab">ლაბორატორია</option>
+        </select>
+      </div>
+
+      <button class="call-btn call-btn-dark" type="submit">გაგზავნა</button>
+
+      <div class="form-msg" id="formMsg" aria-live="polite"></div>
+    </form>
+  </main>
+
+  <script src="js/request-call.js"></script>
+</body>
+</html>
