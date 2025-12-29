@@ -1,20 +1,4 @@
-const nodemailer = require("nodemailer");
 const config = require("./config");
-
-const transporter = nodemailer.createTransport({
-  host: config.smtp.host,
-  port: config.smtp.port,
-  secure: config.smtp.port === 465,
-  auth: {
-    user: config.smtp.user,
-    pass: config.smtp.pass,
-  },
-
-  // Timeouts (helpful on slow networks)
-  connectionTimeout: 20_000,
-  greetingTimeout: 20_000,
-  socketTimeout: 20_000,
-});
 
 function categoryToEmail(category) {
   return config.emails[category] || config.emails.tech;
@@ -23,17 +7,32 @@ function categoryToEmail(category) {
 async function sendRequestEmail({ firstName, lastName, phone, category }) {
   const toEmail = categoryToEmail(category);
 
-  return transporter.sendMail({
-    from: config.smtp.fromEmail,
-    to: toEmail,
-    subject: "📞 ახალი ზარის მოთხოვნა",
-    text: `
-სახელი: ${firstName}
+  const subject = "📞 ახალი ზარის მოთხოვნა";
+  const text = `სახელი: ${firstName}
 გვარი: ${lastName}
 ტელეფონი: ${phone}
-კატეგორია: ${category}
-    `,
+კატეგორია: ${category}`;
+
+  const res = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${process.env.RESEND_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      from: config.smtp.fromEmail,     // FROM_EMAIL env-დან
+      to: [toEmail],
+      subject,
+      text,
+    }),
   });
+
+  if (!res.ok) {
+    const body = await res.text().catch(() => "");
+    throw new Error(`Resend error: ${res.status} ${body}`);
+  }
+
+  return res.json();
 }
 
 module.exports = { sendRequestEmail };
