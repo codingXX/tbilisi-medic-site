@@ -9,6 +9,11 @@ const transporter = nodemailer.createTransport({
     user: config.smtp.user,
     pass: config.smtp.pass,
   },
+
+  // Timeouts (helpful on slow networks)
+  connectionTimeout: 20_000,
+  greetingTimeout: 20_000,
+  socketTimeout: 20_000,
 });
 
 function categoryToEmail(category) {
@@ -31,6 +36,4 @@ async function sendRequestEmail({ firstName, lastName, phone, category }) {
   });
 }
 
-module.exports = {
-  sendRequestEmail,
-};
+module.exports = { sendRequestEmail };
